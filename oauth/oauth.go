@@ -7,8 +7,7 @@ import (
 	"strings"
 	"time"
 
-	"bookstore-oauth-go/errors"
-
+	"github.com/SerhiiKhyzhko/bookstore-oauth-go/errors"
 	"github.com/go-resty/resty/v2"
 )
 
