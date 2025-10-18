@@ -12,7 +12,7 @@ import (
 )
 
 const (
-	headerXPublic   = "X_Public"
+	headerXPublic   = "X-Public"
 	headerXClientId = "X-Client-Id"
 	headerXCallerId = "X-Caller-Id"
 	
