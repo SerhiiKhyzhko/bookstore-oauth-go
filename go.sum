@@ -1,3 +1,5 @@
+github.com/SerhiiKhyzhko/bookstore_utils-go v0.0.0-20260304214926-ac781c02620f h1:v9sngs/li+4RG3ipgxu2qddXjbkAweJ00MnMtAkzBoI=
+github.com/SerhiiKhyzhko/bookstore_utils-go v0.0.0-20260304214926-ac781c02620f/go.mod h1:ZYtaHicPb9V/oll0SlnKqsXUPv16DJPVw3yOA2paDPk=
 github.com/go-resty/resty/v2 v2.16.5 h1:hBKqmWrr7uRc3euHVqmh1HTHcKn99Smr7o5spptdhTM=
 github.com/go-resty/resty/v2 v2.16.5/go.mod h1:hkJtXbA2iKHzJheXYvQ8snQES5ZLGKMwQ07xAwp/fiA=
 golang.org/x/net v0.33.0 h1:74SYHlV8BIgHIFC/LrYkOGIwL19eTYXQ5wc6TBuO36I=
