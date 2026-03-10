@@ -7,7 +7,7 @@ import (
 
 var (
 	BadRequestErr = errors.New("Empty access token")
-	NotFoundUserIdErr = errors.New("No user found with such id")
+	TokenNotFoundErr = errors.New("Token not found")
 	InternalServerErr = errors.New("Internal server error")
 )
 

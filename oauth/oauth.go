@@ -54,7 +54,7 @@ func GetClientId(request *http.Request) (int64, bool) {
 	return clientId, true
 }
 
-func AutenticationRequest(request *http.Request) error {
+func AuthenticationRequest(request *http.Request) error {
 	if request == nil {
 		return nil
 	}
@@ -68,7 +68,7 @@ func AutenticationRequest(request *http.Request) error {
 	at, err := getAccessToken(accessTokenId)
 	if err != nil {
 		if err.Status() == http.StatusNotFound {
-			return oauthErrors.NotFoundUserIdErr
+			return oauthErrors.TokenNotFoundErr 
 		}
 		return oauthErrors.NewCustomInternalServerError(err.Error())
 	}
@@ -88,12 +88,10 @@ func cleanRequest(request *http.Request) {
 }
 
 func getAccessToken(accessTokenId string) (*accessToken, rest_errors.RestErr) {
-	var responseErr rest_errors.RestErr
 	var at accessToken
 
 	response, err := usersRestClient.R().
 		SetResult(&at).
-		SetError(&responseErr).
 		Get(fmt.Sprintf("/oauth/access_token/%s", accessTokenId))
 
 	if err != nil {
@@ -101,6 +99,10 @@ func getAccessToken(accessTokenId string) (*accessToken, rest_errors.RestErr) {
 	}
 
 	if response.IsError() {
+		responseErr, err := rest_errors.NewRestErrorFromBytes(response.Body())
+		if err != nil {
+			return nil, rest_errors.NewInternalServerError(err.Error(), err)
+		}
 		if responseErr.Status() == http.StatusNotFound {
 			return nil, rest_errors.NewNotFoundError(responseErr.Message())
 		} else {
