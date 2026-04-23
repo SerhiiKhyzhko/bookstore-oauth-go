@@ -6,9 +6,9 @@ import (
 )
 
 var (
-	BadRequestErr = errors.New("Empty access token")
-	TokenNotFoundErr = errors.New("Token not found")
-	InternalServerErr = errors.New("Internal server error")
+	BadRequestErr = errors.New("empty access token")
+	TokenNotFoundErr = errors.New("token not found")
+	InternalServerErr = errors.New("internal server error")
 )
 
 func NewCustomInternalServerError(message string) error {

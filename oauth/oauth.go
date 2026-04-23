@@ -25,14 +25,14 @@ type accessToken struct {
 	ClientId int64  `json:"client_id"`
 }
 
-func IsPublic(request *http.Request) bool {
+func (c *OAuthClient) IsPublic(request *http.Request) bool {
 	if request == nil {
 		return true
 	}
 	return request.Header.Get(headerXPublic) == "true"
 }
 
-func GetCallerId(request *http.Request) (int64, bool) {
+func (c *OAuthClient) GetCallerId(request *http.Request) (int64, bool) {
 	if request == nil {
 		return 0, false
 	}
@@ -43,7 +43,7 @@ func GetCallerId(request *http.Request) (int64, bool) {
 	return callerId, true
 }
 
-func GetClientId(request *http.Request) (int64, bool) {
+func (c *OAuthClient) GetClientId(request *http.Request) (int64, bool) {
 	if request == nil {
 		return 0, false
 	}
@@ -54,7 +54,7 @@ func GetClientId(request *http.Request) (int64, bool) {
 	return clientId, true
 }
 
-func AuthenticationRequest(request *http.Request) error {
+func (c *OAuthClient) AuthenticationRequest(request *http.Request) error {
 	if request == nil {
 		return nil
 	}
@@ -65,16 +65,16 @@ func AuthenticationRequest(request *http.Request) error {
 	if accessTokenId == "" {
 		return oauthErrors.BadRequestErr
 	}
-	at, err := getAccessToken(accessTokenId)
+	at, err := c.getAccessToken(accessTokenId)
 	if err != nil {
-		if err.Status() == http.StatusNotFound {
+		if errors.Is(err, oauthErrors.TokenNotFoundErr) {
 			return oauthErrors.TokenNotFoundErr 
 		}
 		return oauthErrors.NewCustomInternalServerError(err.Error())
 	}
 
-	request.Header.Add(headerXClientId, fmt.Sprintf("%v", at.ClientId))
-	request.Header.Add(headerXCallerId, fmt.Sprintf("%v", at.UserId))
+	request.Header.Add(headerXClientId, fmt.Sprintf("%d", at.ClientId))
+	request.Header.Add(headerXCallerId, fmt.Sprintf("%d", at.UserId))
 
 	return nil
 }
@@ -87,26 +87,26 @@ func cleanRequest(request *http.Request) {
 	request.Header.Del(headerXCallerId)
 }
 
-func getAccessToken(accessTokenId string) (*accessToken, rest_errors.RestErr) {
+func (c *OAuthClient) getAccessToken(accessTokenId string) (*accessToken, error) {
 	var at accessToken
 
-	response, err := usersRestClient.R().
+	response, err := c.client.R().
 		SetResult(&at).
 		Get(fmt.Sprintf("/oauth/access_token/%s", accessTokenId))
 
 	if err != nil {
-		return nil, rest_errors.NewInternalServerError(err.Error(), err) //posibly network or timeout error
+		return nil, fmt.Errorf("%w: %w", oauthErrors.InternalServerErr, err) //posibly network or timeout error
 	}
 
 	if response.IsError() {
 		responseErr, err := rest_errors.NewRestErrorFromBytes(response.Body())
 		if err != nil {
-			return nil, rest_errors.NewInternalServerError(err.Error(), err)
+			return nil, fmt.Errorf("%w: %w", oauthErrors.InternalServerErr, err)
 		}
 		if responseErr.Status() == http.StatusNotFound {
-			return nil, rest_errors.NewNotFoundError(responseErr.Message())
+			return nil, fmt.Errorf("%w: %w", oauthErrors.TokenNotFoundErr, responseErr)
 		} else {
-			return nil, rest_errors.NewInternalServerError(responseErr.Message(), errors.New(responseErr.Error()))
+			return nil, fmt.Errorf("%w: %w", oauthErrors.InternalServerErr, responseErr)
 		}
 	}
 

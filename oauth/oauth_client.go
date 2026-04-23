@@ -6,10 +6,12 @@ import (
 	"github.com/go-resty/resty/v2"
 )
 
-var (
-	usersRestClient *resty.Client
-)
+type OAuthClient struct {
+	client *resty.Client
+}
 
-func Init(restyBaseUrl string) {
-	usersRestClient = resty.New().SetTimeout(150 * time.Millisecond).SetBaseURL(restyBaseUrl)
+func NewOAuthClient(baseUrl string, timeout time.Duration) *OAuthClient {
+    return &OAuthClient{
+        client: resty.New().SetTimeout(timeout).SetBaseURL(baseUrl),
+    }
 }
