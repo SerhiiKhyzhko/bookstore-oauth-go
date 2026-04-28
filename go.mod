@@ -12,7 +12,7 @@ require (
 )
 
 require (
-	github.com/SerhiiKhyzhko/bookstore_utils-go v0.0.0-20260304214926-ac781c02620f
+	github.com/SerhiiKhyzhko/bookstore_utils-go v0.0.0-20260428151356-5a9238c66292
 	github.com/stretchr/testify v1.11.1
 	golang.org/x/net v0.33.0 // indirect
 )
