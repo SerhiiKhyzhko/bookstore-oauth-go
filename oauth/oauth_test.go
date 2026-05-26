@@ -140,7 +140,8 @@ func TestAuthenticationRequest(t *testing.T) {
 		url := fmt.Sprintf("%s/oauth/access_token/invalid-token", mockAPIBaseURL)
 		httpmock.RegisterResponder("GET", url, httpmock.NewBytesResponder(404, jsonBytes))
 
-		req := httptest.NewRequest(http.MethodGet, "/?access_token=invalid-token", nil)
+		req := httptest.NewRequest(http.MethodGet, "/", nil)
+		req.Header.Set("Authorization", "Bearer invalid-token")
 		err := oauthClient.AuthenticationRequest(req)
 
 		assert.NotNil(t, err)
@@ -153,7 +154,8 @@ func TestAuthenticationRequest(t *testing.T) {
 		url := fmt.Sprintf("%s/oauth/access_token/internal-error-token", mockAPIBaseURL)
 		httpmock.RegisterResponder("GET", url, httpmock.NewBytesResponder(500, jsonBytes))
 
-		req := httptest.NewRequest(http.MethodGet, "/?access_token=internal-error-token", nil)
+		req := httptest.NewRequest(http.MethodGet, "/", nil)
+		req.Header.Set("Authorization", "Bearer internal-error-token")
 		err := oauthClient.AuthenticationRequest(req)
 
 		assert.NotNil(t, err)
@@ -169,7 +171,8 @@ func TestAuthenticationRequest(t *testing.T) {
         }),
     )
 
-		req := httptest.NewRequest(http.MethodGet, "/?access_token=valid-token", nil)
+		req := httptest.NewRequest(http.MethodGet, "/", nil)
+		req.Header.Set("Authorization", "Bearer valid-token")
 		req.Header.Set(headerXCallerId, "old-caller")
 		req.Header.Set(headerXClientId, "old-client")
 

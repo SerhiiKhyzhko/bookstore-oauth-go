@@ -61,14 +61,16 @@ func (c *OAuthClient) AuthenticationRequest(request *http.Request) error {
 
 	cleanRequest(request)
 
-	accessTokenId := strings.TrimSpace(request.URL.Query().Get(paramAccessToken))
+	authHeader := request.Header.Get("Authorization")
+	accessTokenId := strings.TrimPrefix(authHeader, "Bearer ")
+	accessTokenId = strings.TrimSpace(accessTokenId)
 	if accessTokenId == "" {
 		return oauthErrors.BadRequestErr
 	}
 	at, err := c.getAccessToken(accessTokenId)
 	if err != nil {
 		if errors.Is(err, oauthErrors.TokenNotFoundErr) {
-			return oauthErrors.TokenNotFoundErr 
+			return oauthErrors.TokenNotFoundErr
 		}
 		return oauthErrors.NewCustomInternalServerError(err.Error())
 	}
