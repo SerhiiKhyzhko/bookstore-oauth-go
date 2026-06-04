@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/SerhiiKhyzhko/bookstore-oauth-go/jwtErrors"
+	"github.com/SerhiiKhyzhko/bookstore-oauth-go/v2/jwtErrors"
 	"github.com/golang-jwt/jwt/v5"
 )
 

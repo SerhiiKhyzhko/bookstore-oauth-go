@@ -6,7 +6,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/SerhiiKhyzhko/bookstore-oauth-go/jwtErrors"
+	"github.com/SerhiiKhyzhko/bookstore-oauth-go/v2/jwtErrors"
 	"github.com/SerhiiKhyzhko/bookstore_utils-go/logger"
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/stretchr/testify/assert"
