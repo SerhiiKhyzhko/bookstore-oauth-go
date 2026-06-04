@@ -1,4 +1,4 @@
-package oauthErrors
+package jwtErrors
 
 import (
 	"errors"
@@ -7,7 +7,7 @@ import (
 
 var (
 	BadRequestErr = errors.New("empty access token")
-	TokenNotFoundErr = errors.New("token not found")
+	UnauthorizedErr   = errors.New("unauthorized")
 	InternalServerErr = errors.New("internal server error")
 )
 
